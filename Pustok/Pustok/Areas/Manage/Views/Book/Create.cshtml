@@ -1,0 +1,114 @@
+﻿@model Book
+@{
+
+    ViewData["Title"] = "Create";
+}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <form asp-action="create" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">Name</label>
+                    <input asp-for="Name" type="text" class="form-control">
+                    <span class="text-danger" asp-validation-for="Name"></span>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="AuthorId">Authors</label>
+                            <select asp-for="AuthorId" class="form-control"  asp-items="new SelectList((List<Author>)ViewBag.Authors,nameof(Author.Id),nameof(Author.FullName))">
+                            </select>
+                            <span class="text-danger" asp-validation-for="AuthorId"></span>
+                        </div>
+                    </div>
+                     <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="GenreId">Genres</label>
+                            <select asp-for="GenreId" class="form-control" asp-items="new SelectList((List<Genre>)ViewBag.Genres,nameof(Genre.Id),nameof(Genre.Name))">
+                            </select>
+                            <span class="text-danger" asp-validation-for="GenreId"></span>
+                        </div>
+                    </div>
+                     <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="TagIds">Tag</label>
+                            <select asp-for="TagIds" class="form-control" asp-items="new SelectList((List<Tag>)ViewBag.Tags,nameof(Tag.Id),nameof(Tag.Name))">
+                            </select>
+                            <span class="text-danger" asp-validation-for="TagIds"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label asp-for="CostPrice" class="form-label">CostPrice</label>
+                        <input asp-for="CostPrice" class="form-control">
+                        <span class="text-danger" asp-validation-for="CostPrice"></span>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label asp-for="SalePrice" class="form-label">SalePrice</label>
+                        <input asp-for="SalePrice" class="form-control">
+                        <span class="text-danger" asp-validation-for="SalePrice"></span>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label asp-for="DiscountPercent" class="form-label">DiscountPercent</label>
+                        <input asp-for="DiscountPercent" class="form-control">
+                        <span class="text-danger" asp-validation-for="DiscountPercent"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label asp-for="PageSize" class="form-label">PageSize</label>
+                        <input asp-for="PageSize" class="form-control">
+                        <span class="text-danger" asp-validation-for="PageSize"></span>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label asp-for="Rate" class="form-label">Rate</label>
+                        <input asp-for="Rate" class="form-control">
+                        <span class="text-danger" asp-validation-for="Rate"></span>
+                    </div>
+                    <div class="mb-3 col-md-4 d-flex align-items-center">
+                        <div class="custom-control custom-checkbox small">
+                            <input asp-for="IsAvailable" type="checkbox" class="custom-control-input">
+                            <label asp-for="IsAvailable" class="custom-control-label">
+                                IsAvaliable
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="SubDesc" class="form-label">SubDesc</label>
+                    <input asp-for="SubDesc" class="form-control">
+                    <span class="text-danger" asp-validation-for="SubDesc"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Desc" class="form-label">Desc</label>
+                    <textarea asp-for="Desc" class="form-control"></textarea>
+                    <span class="text-danger" asp-validation-for="Desc"></span>
+                </div>
+                  <div class="mb-3">
+                    <label asp-for="PosterFile" class="form-label">PosterFile</label>
+                    <input asp-for="PosterFile" class="form-control">
+                    <span class="text-danger" asp-validation-for="PosterFile"></span>
+                </div>
+                   <div class="mb-3">
+                    <label asp-for="HoverPosterFile" class="form-label">HoverPosterFile</label>
+                    <input asp-for="HoverPosterFile" class="form-control">
+                    <span class="text-danger" asp-validation-for="HoverPosterFile"></span>
+                </div>
+                   <div class="mb-3">
+                    <label asp-for="ImageFiles" class="form-label">ImageFiles</label>
+                    <input asp-for="ImageFiles" class="form-control">
+                    <span class="text-danger" asp-validation-for="ImageFiles"></span>
+                </div>
+
+
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

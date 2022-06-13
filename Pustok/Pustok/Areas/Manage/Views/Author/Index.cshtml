@@ -1,0 +1,47 @@
+﻿@model List<Author>
+@{
+    ViewData["Title"] = "Index";
+    int count = 0;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <a asp-action="create" class="btn btn-primary">Create</a>
+        </div>
+        <div class="col-md-10 mx-auto">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">FullName</th>
+                        <th scope="col">BirthDate</th>
+                        <th scope="col">Books count</th>
+                        <th scope="col">Actions</th>
+                        
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var auth in Model)
+                    {
+                        count++;
+                        <tr>
+                            <th scope="row">@count</th>
+                            <td>@auth.FullName</td>
+                            <td>@auth.BirthDate.ToString("dd-MM-yyyy")</td>
+                            <td>@auth.Books.Count()</td>
+                            <td>
+                                <a asp-action="edit" asp-route-id="@auth.Id" class="btn btn-warning">Edit</a>
+                                <a asp-action="delete" asp-route-id="@auth.Id" class="btn btn-danger">Delete</a>
+                                <a asp-action="sweetdelete" asp-route-id="@auth.Id"  class="btn btn-danger sweet-delete">Sweet delete</a>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
