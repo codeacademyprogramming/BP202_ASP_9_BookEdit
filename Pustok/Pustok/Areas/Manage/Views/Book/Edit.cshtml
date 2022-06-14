@@ -95,7 +95,7 @@
                             <label asp-for="PosterFile" class="form-label">PosterFile</label>
                             <input asp-for="PosterFile" class="form-control">
                             <span class="text-danger" asp-validation-for="PosterFile"></span>
-                            <img src="~/uploads/books/@Model.BookImages.FirstOrDefault(x=>x.PosterStatus==true).Name" width="200" />
+                            <img src="~/uploads/books/@Model.BookImages.FirstOrDefault(x=>x.PosterStatus==true)?.Name" width="200" />
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -103,7 +103,7 @@
                             <label asp-for="HoverPosterFile" class="form-label">HoverPosterFile</label>
                             <input asp-for="HoverPosterFile" class="form-control">
                             <span class="text-danger" asp-validation-for="HoverPosterFile"></span>
-                            <img src="~/uploads/books/@Model.BookImages.FirstOrDefault(x=>x.PosterStatus==false).Name" width="200" />
+                            <img src="~/uploads/books/@Model.BookImages.FirstOrDefault(x=>x.PosterStatus==false)?.Name" width="200" />
                         </div>
                     </div>
                 </div>

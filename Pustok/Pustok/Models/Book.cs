@@ -23,6 +23,8 @@ namespace Pustok.Models
         public int PageSize { get; set; }
         public bool IsAvailable { get; set; }
         public byte Rate { get; set; }
+        public bool IsNew { get; set; }
+        public bool IsFeatured { get; set; }
 
         public Genre Genre { get; set; }
         public Author Author { get; set; }
@@ -42,6 +44,6 @@ namespace Pustok.Models
 
         public List<BookTag> BookTags { get; set; } = new List<BookTag>();
         [NotMapped]
-        public List<int> TagIds { get; set; }
+        public List<int> TagIds { get; set; } = new List<int>();
     }
 }

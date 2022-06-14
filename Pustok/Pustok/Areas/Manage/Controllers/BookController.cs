@@ -130,7 +130,9 @@ namespace Pustok.Areas.Manage.Controllers
                 ModelState.AddModelError("GenreId", "Genre notfound");
 
             if(book.PosterFile!=null)
-                CheckPosterFiles(book);
+                CheckPosterFile(book);
+            if(book.HoverPosterFile!=null)
+                CheckHoverPosterFile(book);
 
             CheckImageFiles(book);
             CheckTags(book);
@@ -153,9 +155,32 @@ namespace Pustok.Areas.Manage.Controllers
             if (book.PosterFile != null)
             {
                 BookImage poster = existBook.BookImages.FirstOrDefault(x => x.PosterStatus == true);
-                deletedFiles.Add(poster.Name);
+
+                if (poster == null)
+                {
+                    poster = new BookImage { PosterStatus = true };
+                    existBook.BookImages.Add(poster);
+                }
+                else
+                    deletedFiles.Add(poster.Name);
 
                 poster.Name = FileManager.Save(_env.WebRootPath, "uploads/books", book.PosterFile);
+            }
+
+            if (book.HoverPosterFile != null)
+            {
+                BookImage poster = existBook.BookImages.FirstOrDefault(x => x.PosterStatus == false);
+
+                if (poster == null)
+                {
+                    poster = new BookImage { PosterStatus = false };
+                    existBook.BookImages.Add(poster);
+                }
+                else
+                    deletedFiles.Add(poster.Name);
+
+                poster.Name = FileManager.Save(_env.WebRootPath, "uploads/books", book.HoverPosterFile);
+
             }
 
             existBook.BookTags.RemoveAll(bt=>!book.TagIds.Contains(bt.TagId));
@@ -224,11 +249,11 @@ namespace Pustok.Areas.Manage.Controllers
             }
             else
             {
-                CheckPosterFiles(book);
+                CheckPosterFile(book);
             }
         }
 
-        private void CheckPosterFiles(Book book)
+        private void CheckPosterFile(Book book)
         {
 
             if (book.PosterFile.ContentType != "image/png" && book.PosterFile.ContentType != "image/jpeg")
