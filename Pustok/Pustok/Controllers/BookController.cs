@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Pustok.DAL;
 using Pustok.Models;
+using Pustok.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,27 @@ namespace Pustok.Controllers
                 return NotFound();
 
             return PartialView("_BookModalPartial", book);
+        }
+
+        public IActionResult Detail(int id)
+        {
+            Book book = _context.Books
+                .Include(x=>x.BookImages)
+                .Include(x=>x.Genre)
+                .Include(x=>x.Author)
+                .Include(x=>x.BookTags).ThenInclude(x=>x.Tag)
+                .FirstOrDefault(x => x.Id == id);
+
+            if (book == null)
+                return RedirectToAction("error", "dashboard");
+
+            BookDetailViewModel bookVM = new BookDetailViewModel
+            {
+                Book = book,
+                RelatedBooks = _context.Books.Include(x=>x.BookImages).Include(x=>x.Author).Where(x => x.GenreId == book.GenreId).Take(6).ToList()
+            };
+
+            return View(bookVM);
         }
     }
 }

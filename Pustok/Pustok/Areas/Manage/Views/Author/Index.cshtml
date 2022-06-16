@@ -18,8 +18,8 @@
                         <th scope="col">BirthDate</th>
                         <th scope="col">Books count</th>
                         <th scope="col">Actions</th>
-                        
-                        
+
+
                     </tr>
                 </thead>
                 <tbody>
@@ -34,13 +34,24 @@
                             <td>
                                 <a asp-action="edit" asp-route-id="@auth.Id" class="btn btn-warning">Edit</a>
                                 <a asp-action="delete" asp-route-id="@auth.Id" class="btn btn-danger">Delete</a>
-                                <a asp-action="sweetdelete" asp-route-id="@auth.Id"  class="btn btn-danger sweet-delete">Sweet delete</a>
+                                <a asp-action="sweetdelete" asp-route-id="@auth.Id" class="btn btn-danger sweet-delete">Sweet delete</a>
                             </td>
                         </tr>
                     }
 
                 </tbody>
             </table>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#"><<</a></li>
+                    <li class="page-item"><a class="page-link" href="#"><</a></li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">></a></li>
+                    <li class="page-item"><a class="page-link" href="#">>></a></li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

@@ -15,7 +15,7 @@ namespace Pustok.Areas.Manage.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public IActionResult Index(int page=1)
         {
             var data = _context.Authors.Include(x=>x.Books).ToList();
             return View(data);
