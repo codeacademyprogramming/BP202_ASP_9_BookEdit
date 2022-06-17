@@ -47,21 +47,22 @@
                                     <form class="user" asp-action="login" method="post">
                                         <div class="form-group">
                                             <input asp-for="UserName" class="form-control form-control-user">
-                                            <span asp-validation-for="UserName"></span>
+                                            <span class="text-danger" asp-validation-for="UserName"></span>
                                         </div>
                                         <div class="form-group">
                                             <input asp-for="Password" class="form-control form-control-user">
-                                            <span asp-validation-for="Password"></span>
+                                            <span class="text-danger" asp-validation-for="Password"></span>
                                         </div>
+                                        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                                         @*<div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">
-                                                    Remember
-                                                    Me
-                                                </label>
-                                            </div>
-                                        </div>*@
+                                                <div class="custom-control custom-checkbox small">
+                                                    <input type="checkbox" class="custom-control-input" id="customCheck">
+                                                    <label class="custom-control-label" for="customCheck">
+                                                        Remember
+                                                        Me
+                                                    </label>
+                                                </div>
+                                            </div>*@
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Login
                                         </button>
@@ -78,7 +79,7 @@
                             </div>
                         </div>
                     </div>
-                </div>  
+                </div>
 
             </div>
 
@@ -92,6 +93,9 @@
 
     <!-- Core plugin JavaScript-->
     <script src="~/manage/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.4/jquery.validate.min.js" integrity="sha512-FOhq9HThdn7ltbK8abmGn60A/EMtEzIzv1rvuh+DqzJtSGq8BRdEN0U+j0iKEIffiw/yEtVuladk6rsG4X6Uqg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    <!-- Bootstrap core JavaScript-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js" integrity="sha512-o6XqxgrUsKmchwy9G5VRNWSSxTS4Urr4loO6/0hYdpWmFUfHqGzawGxeQGMDqYzxjY9sbktPbNlkIQJWagVZQg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- Custom scripts for all pages-->
     <script src="~/manage/js/sb-admin-2.min.js"></script>

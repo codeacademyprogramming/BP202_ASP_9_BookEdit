@@ -1,4 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> _userManager
+@{ 
+    AppUser logged = null;
+    if (User.Identity.IsAuthenticated)
+    {
+        logged = await _userManager.FindByNameAsync(User.Identity.Name);
+    }
+}
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -274,7 +283,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@logged?.FullName</span>
                                 <img class="img-profile rounded-circle"
                                      src="~/manage/imgundraw_profile.svg">
                             </a>
