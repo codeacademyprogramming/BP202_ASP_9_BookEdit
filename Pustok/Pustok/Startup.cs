@@ -35,6 +35,7 @@ namespace Pustok
             services.AddScoped<LayoutService>();
             //services.AddTransient<LayoutService>();\
 
+
             services.AddIdentity<AppUser, IdentityRole>(opt =>
             {
                 opt.Password.RequireDigit = true;

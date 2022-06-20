@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pustok.DAL;
 using Pustok.Models;
+using System;
 using System.Linq;
 
 namespace Pustok.Areas.Manage.Controllers
 {
     [Area("manage")]
+    [Authorize(Roles = "SuperAdmin,Admin")]
     public class AuthorController : Controller
     {
         private readonly AppDbContext _context;
@@ -17,7 +20,9 @@ namespace Pustok.Areas.Manage.Controllers
         }
         public IActionResult Index(int page=1)
         {
-            var data = _context.Authors.Include(x=>x.Books).ToList();
+            ViewBag.Page = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(_context.Authors.Include(x => x.Books).Where(x => !x.IsDeleted).Count() / 2d);
+            var data = _context.Authors.Include(x=>x.Books).Where(x=>!x.IsDeleted).Skip((page-1)*2).Take(2).ToList();
             return View(data);
         }
 
@@ -35,6 +40,12 @@ namespace Pustok.Areas.Manage.Controllers
             }
 
             _context.Authors.Add(author);
+            author.CreatedAt = DateTime.UtcNow.AddHours(4);
+            author.ModifiedAt = DateTime.UtcNow.AddHours(4);
+
+            AppUser admin = _context.Users.FirstOrDefault(c => c.UserName == User.Identity.Name);
+            author.ModifiedBy = admin.Id;
+
             _context.SaveChanges();
 
             return RedirectToAction("index");
@@ -43,7 +54,7 @@ namespace Pustok.Areas.Manage.Controllers
 
         public IActionResult Edit(int id)
         {
-            Author author = _context.Authors.FirstOrDefault(x => x.Id == id);
+            Author author = _context.Authors.FirstOrDefault(x => x.Id == id && !x.IsDeleted);
 
             if (author == null)
                 return RedirectToAction("error", "dashboard");
@@ -57,13 +68,18 @@ namespace Pustok.Areas.Manage.Controllers
             if (!ModelState.IsValid)
                 return View();
 
-            Author existAuth = _context.Authors.FirstOrDefault(x => x.Id == author.Id);
+            Author existAuth = _context.Authors.FirstOrDefault(x => x.Id == author.Id && !x.IsDeleted);
 
             if (existAuth == null)
                 return RedirectToAction("error", "dashboard");
 
             existAuth.FullName = author.FullName;
             existAuth.BirthDate = author.BirthDate;
+
+            existAuth.ModifiedAt = DateTime.UtcNow.AddHours(4);
+
+            AppUser admin = _context.Users.FirstOrDefault(c => c.UserName == User.Identity.Name);
+            existAuth.ModifiedBy = admin.Id;
 
             _context.SaveChanges();
 
@@ -78,6 +94,11 @@ namespace Pustok.Areas.Manage.Controllers
             if (author == null)
                 return RedirectToAction("error", "dashboard");
 
+            author.ModifiedAt = DateTime.UtcNow.AddHours(4);
+
+            AppUser admin = _context.Users.FirstOrDefault(c => c.UserName == User.Identity.Name);
+            author.ModifiedBy = admin.Id;
+
             return View(author);
         }
             
@@ -90,7 +111,12 @@ namespace Pustok.Areas.Manage.Controllers
             if(existAuth == null)
                 return RedirectToAction("error", "dashboard");
 
-            _context.Authors.Remove(existAuth);
+            //_context.Authors.Remove(existAuth);
+            existAuth.IsDeleted = true;
+            existAuth.ModifiedAt = DateTime.UtcNow.AddHours(4);
+
+            AppUser admin = _context.Users.FirstOrDefault(c => c.UserName == User.Identity.Name);
+            existAuth.ModifiedBy = admin.Id;
             _context.SaveChanges();
 
             return RedirectToAction("index");
@@ -103,7 +129,12 @@ namespace Pustok.Areas.Manage.Controllers
             if (author == null)
                 return NotFound();
 
-            _context.Authors.Remove(author);
+            //_context.Authors.Remove(author);
+            author.ModifiedAt = DateTime.UtcNow.AddHours(4);
+
+            AppUser admin = _context.Users.FirstOrDefault(c => c.UserName == User.Identity.Name);
+            author.ModifiedBy = admin.Id;
+            author.IsDeleted = true;
             _context.SaveChanges();
 
             return Ok();

@@ -56,9 +56,29 @@ namespace Pustok.Controllers
                 return View("index");
             }
 
+            string token = await _userManager.GenerateEmailConfirmationTokenAsync(member);
+
+            var url = Url.Action("ConfirmEmail", "Account", new { email = member.Email, token = token }, Request.Scheme);
+
             await _userManager.AddToRoleAsync(member, "Member");
 
+            return Ok(new { URL = url });
+
             return RedirectToAction("index");
+        }
+
+        public async Task<IActionResult> ConfirmEmail(string email,string token)
+        {
+            AppUser member = await _userManager.FindByEmailAsync(email);
+            if (member == null)
+                return RedirectToAction("error", "dashboard");
+
+            var result = await _userManager.ConfirmEmailAsync(member, token);
+
+            if (result.Succeeded)
+                return RedirectToAction("index");
+            else
+                return RedirectToAction("error", "dashboard");
         }
 
         [HttpPost]
@@ -72,6 +92,12 @@ namespace Pustok.Controllers
             if (member == null)
             {
                 ModelState.AddModelError("", "UserName or Password is incorrect");
+                return View("index", new AccountIndexViewModel { LoginVM = memberVM, RegisterVM = new MemberRegisterViewModel() });
+            }
+
+            if (!member.EmailConfirmed)
+            {
+                ModelState.AddModelError("", "Please,confirm your email account!");
                 return View("index", new AccountIndexViewModel { LoginVM = memberVM, RegisterVM = new MemberRegisterViewModel() });
             }
 
@@ -91,5 +117,74 @@ namespace Pustok.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("index", "home");
         }
+
+        public IActionResult Forgot()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Forgot(MemberForgotPasswordViewModel memberVM)
+        {
+            if (!ModelState.IsValid) return View();
+
+            AppUser member = await _userManager.FindByEmailAsync(memberVM.Email);
+            if(member == null)
+            {
+                ModelState.AddModelError("Email", "Email movcud deyil!");
+                return View();
+            }
+
+            string token = await _userManager.GeneratePasswordResetTokenAsync(member);
+
+            var url = Url.Action("ResetPassword", "Account", new { email = member.Email, token = token }, Request.Scheme);
+
+            return Ok(new { URL = url });
+        }
+
+        public async  Task<IActionResult> ResetPassword(string email,string token)
+        {
+            AppUser member = await _userManager.Users.FirstOrDefaultAsync(x => !x.IsAdmin && x.NormalizedEmail == email.ToUpper());
+            if (member == null)
+                return RedirectToAction("error","dashboard");
+
+            if (!await _userManager.VerifyUserTokenAsync(member, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", token))
+                return RedirectToAction("error", "dashboard");
+
+
+            MemberResetPasswordViewModel vm = new MemberResetPasswordViewModel
+            {
+                Email = email,
+                Token = token
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(MemberResetPasswordViewModel resetVM)
+        {
+            if (!ModelState.IsValid) return View();
+
+            AppUser member = await _userManager.Users.FirstOrDefaultAsync(x => !x.IsAdmin && x.NormalizedEmail == resetVM.Email.ToUpper());
+
+            if (member == null)
+                return RedirectToAction("error", "dashboard");
+
+
+            var result = await _userManager.ResetPasswordAsync(member, resetVM.Token, resetVM.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError("", item.Description);
+                }
+                return View();
+            }
+
+            return RedirectToAction("index");
+        }
+
+
     }
 }

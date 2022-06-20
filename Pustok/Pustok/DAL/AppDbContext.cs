@@ -20,6 +20,7 @@ namespace Pustok.DAL
         public DbSet<BookTag> BookTags { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<AppUser> Users { get; set; }
+        public DbSet<BookComment> BookComments { get; set; }
     }
 
 }

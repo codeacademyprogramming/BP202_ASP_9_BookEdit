@@ -53,10 +53,32 @@ namespace Pustok.Controllers
             BookDetailViewModel bookVM = new BookDetailViewModel
             {
                 Book = book,
-                RelatedBooks = _context.Books.Include(x=>x.BookImages).Include(x=>x.Author).Where(x => x.GenreId == book.GenreId).Take(6).ToList()
+                RelatedBooks = _context.Books.Include(x=>x.BookImages).Include(x=>x.Author).Where(x => x.GenreId == book.GenreId).Take(6).ToList(),
+                BookComment = new BookCommentPostViewModel { BookId = id}
             };
 
             return View(bookVM);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Comment(BookCommentPostViewModel commentVM)
+        {
+            AppUser user = await _context.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == User.Identity.Name.ToUpper());
+
+            BookComment comment = new BookComment
+            {
+                BookId = commentVM.BookId,
+                AppUserId = user.Id,
+                Rate = commentVM.Rate,
+                CreatedAt = DateTime.UtcNow.AddHours(4),
+                Text = commentVM.Text
+            };
+
+            await _context.BookComments.AddAsync(comment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("detail", new { id = commentVM.BookId });
         }
     }
 }
