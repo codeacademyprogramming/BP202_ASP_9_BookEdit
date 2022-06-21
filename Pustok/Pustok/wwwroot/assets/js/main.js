@@ -18,7 +18,16 @@
                 }
                 
             })
+    })
 
-       
+    $(".add-basket").click(function (e) {
+        e.preventDefault();
+
+        let url = $(this).attr("href");
+
+        fetch(url).then(response => response.text()).then(data => {
+            $("#basketBlock").html(data)
+            console.log(data)
+        })
     })
 })

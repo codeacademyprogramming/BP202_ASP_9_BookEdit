@@ -46,6 +46,13 @@ namespace Pustok
                 opt.User.RequireUniqueEmail = false;
                 opt.Lockout.MaxFailedAccessAttempts = 3;
             }).AddDefaultTokenProviders().AddEntityFrameworkStores<AppDbContext>();
+
+            services.AddSession(x =>
+            {
+                x.IdleTimeout = TimeSpan.FromSeconds(30);
+            });
+
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -67,6 +74,8 @@ namespace Pustok
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

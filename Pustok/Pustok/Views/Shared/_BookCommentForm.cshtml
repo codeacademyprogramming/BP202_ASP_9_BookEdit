@@ -13,12 +13,13 @@
         <label for="star4"></label>
         <input form="postcomment" type="radio" name="rate" value="1" id="star5">
         <label for="star5"></label>
-        <span class="text-danger" asp-validation-for="Rate"></span>
     </span>
+    <span class="text-danger" asp-validation-for="Rate"></span>
+
     <form asp-action="comment" method="post" id="postcomment" class="mt--15 site-form ">
         <div class="row">
             <div class="col-12">
-                <input  type="hidden" asp-for="BookId"/>
+                <input type="hidden" asp-for="BookId" />
                 <div class="form-group">
                     <label asp-for="Text">Comment</label>
                     <textarea asp-for="Text" cols="30" rows="10"
@@ -32,5 +33,6 @@
                 </div>
             </div>
         </div>
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
     </form>
 </div>

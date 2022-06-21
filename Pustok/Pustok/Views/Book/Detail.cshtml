@@ -90,7 +90,9 @@
                             }
                         </div>
                         <div class="review-widget">
-                            <a href="#">(1 Reviews)</a> <span>|</span>
+                            <a href="#">
+                                @(Model.Book.BookComments.Count>0?$"{Model.Book.BookComments.Count} Reviews":"No Review")
+                            </a> <span>|</span>
                             <a href="#">Write a review</a>
                         </div>
                     </div>
@@ -130,7 +132,7 @@
                 <li class="nav-item">
                     <a class="nav-link" id="tab2" data-toggle="tab" href="#tab-2" role="tab"
                        aria-controls="tab-2" aria-selected="true">
-                        REVIEWS (1)
+                        @(Model.Book.BookComments.Count>0?$"{Model.Book.BookComments.Count} Reviews":"No Review")
                     </a>
                 </li>
             </ul>
@@ -145,29 +147,32 @@
                 </div>
                 <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="tab2">
                     <div class="review-wrapper">
-                        <h2 class="title-lg mb--20">1 REVIEW FOR AUCTOR GRAVIDA ENIM</h2>
-                        <div class="review-comment mb--20">
-                            <div class="avatar">
-                                <img src="image/icon/author-logo.png" alt="">
-                            </div>
-                            <div class="text">
-                                <div class="rating-block mb--15">
-                                    <span class="ion-android-star-outline star_on"></span>
-                                    <span class="ion-android-star-outline star_on"></span>
-                                    <span class="ion-android-star-outline star_on"></span>
-                                    <span class="ion-android-star-outline"></span>
-                                    <span class="ion-android-star-outline"></span>
+
+                        <h2 class="title-lg mb--20">@(Model.Book.BookComments.Count>0?$"{Model.Book.BookComments.Count} Reviews":"No Review")</h2>
+                        @foreach (var item in Model.Book.BookComments)
+                        {
+                            <div class="review-comment mb--20">
+                                <div class="avatar">
+                                    <img src="image/icon/author-logo.png" alt="">
                                 </div>
-                                <h6 class="author">
-                                    ADMIN – <span class="font-weight-400">March 23, 2015</span>
-                                </h6>
-                                <p>
-                                    Lorem et placerat vestibulum, metus nisi posuere nisl, in accumsan elit odio
-                                    quis mi.
-                                </p>
+                                <div class="text">
+                                   
+                                    <div class="rating-block mb--15">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <span class="ion-android-star-outline @(i<=item.Rate?"star_on":"")"></span>
+                                        }
+                                    </div>
+                                    <h6 class="author">
+                                        @item.AppUser.FullName – <span class="font-weight-400">@item.CreatedAt.ToString("MMMM dd, yyyy")</span>
+                                    </h6>
+                                    <p>
+                                        @item.Text
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                     @await Html.PartialAsync("_BookCommentForm",Model.BookComment)
+                        }
+                        @await Html.PartialAsync("_BookCommentForm", Model.BookComment)
                     </div>
                 </div>
             </div>
